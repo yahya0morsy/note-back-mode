@@ -16,7 +16,7 @@ const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo');
 var app = express();
 
-mongoose.connect('mongodb://localhost:27017/').then(console.log("database connect"))
+mongoose.connect('mongodb+srv://h632097:yahya666@cluster0.xv5zm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(console.log("database connect"))
 let corsOptions = {
   origin: [ 'http://localhost:5173', 'http://localhost:5175' ],
   credentials: true 
