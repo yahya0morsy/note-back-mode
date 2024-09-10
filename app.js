@@ -18,7 +18,7 @@ var app = express();
 
 mongoose.connect('mongodb+srv://h632097:yahya666@cluster0.xv5zm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(console.log("database connect"))
 let corsOptions = {
-  origin: [ 'http://localhost:5173', 'http://localhost:5175' ],
+  origin: [ 'http://localhost:5173', 'http://localhost:5175','https://yahya0morsy.github.io/note-front' ],
   credentials: true 
 };
 app.use(cors(corsOptions));
