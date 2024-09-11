@@ -36,7 +36,12 @@ app.use(session({
   secret: 'your-secret-key',
  resave: false,
  saveUninitialized: false,
- cookie:{maxAge: 6000*6000,sameSite: 'None'},
+ cookie:{maxAge: 6000*6000,
+  sameSite: 'None',
+  httpOnly: true,
+  secure:true,
+  domain: 'note-back-nine.vercel.app'
+},
  store: MongoStore.create(
   {client: mongoose.connection.getClient()}
  )
