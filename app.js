@@ -37,9 +37,7 @@ app.use(session({
  resave: false,
  saveUninitialized: false,
  cookie:{maxAge: 6000*6000,
-  sameSite: 'None',
-  httpOnly: true,
-  secure:true,
+  sameSite:'none',
   domain: 'note-back-nine.vercel.app'
 },
  store: MongoStore.create(
