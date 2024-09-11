@@ -38,7 +38,7 @@ app.use(session({
  saveUninitialized: false,
  cookie:{maxAge: 6000*6000,
   sameSite:'none',
-  domain: 'note-back-nine.vercel.app'
+  withCredentials:true
 },
  store: MongoStore.create(
   {client: mongoose.connection.getClient()}
