@@ -1,7 +1,9 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-
+require('./public/hasher.js')
+require('./public/handypassport.js')
+require('./public/serialize.js')
 var logger = require('morgan');
 
 

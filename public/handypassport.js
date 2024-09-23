@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const User = require('../src/schemas/user');
 const { comparepass } = require('../public/hasher.js');
 require('../public/hasher.js')
-async function Login(username,password){
+Login =async function Login(username,password){
     console.log("workes");
     const finduser =await User.findOne({Username:username});
     try{

@@ -4,7 +4,7 @@ var User = require('../src/schemas/user.js');
 var Notes = require('../src/schemas/notes.js');
 const mongoose = require('mongoose');
 
-var trying = require('../public/try.js')
+
 require('../public/hasher.js')
 var Login = require('../public/handypassport.js')
 var Serialize = require('../public/serialize.js')
