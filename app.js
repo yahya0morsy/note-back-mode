@@ -15,10 +15,11 @@ const session = require('express-session');
 const mongoose = require('mongoose')
 const MongoStore = require('connect-mongo');
 var app = express();
-
 mongoose.connect('mongodb+srv://h632097:yahya666@cluster0.xv5zm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(console.log("database connect"))
+//mongoose.connect('mongodb://localhost:27017').then(console.log("database connect"))
+
 let corsOptions = {
-  origin: [ 'http://localhost:5173', 'http://localhost:5175','https://yahya0morsy.github.io/note-front', "https://yahya0morsy.github.io" ],
+  origin: [ 'http://localhost:5173', 'http://localhost:5175','https://yahya0morsy.github.io/note-front', 'https://yahya0morsy.github.io','http://localhost:8000','https://yahya0morsy.github.io/note-front/#/try' ],
   credentials: true 
 };
 app.use(cors(corsOptions));
@@ -31,14 +32,18 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-
+app.set('trust proxy', true);
 app.use(session({
   secret: 'your-secret-key',
+  name:'note-session',
  resave: false,
  saveUninitialized: false,
  cookie:{maxAge: 6000*6000,
-  sameSite:'none',
-  withCredentials:true
+  //httpOnly:true,
+  //secure:true,
+  
+  sameSite:"lax",
+  
 },
  store: MongoStore.create(
   {client: mongoose.connection.getClient()}
