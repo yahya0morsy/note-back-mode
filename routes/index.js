@@ -3,9 +3,7 @@ var router = express.Router();
 var User = require('../src/schemas/user.js');
 var Notes = require('../src/schemas/notes.js');
 const mongoose = require('mongoose');
-const session = require('express-session');
-require('../public/local-strategy.js');
-var passport = require('passport');
+
 var trying = require('../public/try.js')
 require('../public/hasher.js')
 var Login = require('../public/handypassport.js')

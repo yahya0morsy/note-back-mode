@@ -1,19 +1,18 @@
 var createError = require('http-errors');
 var express = require('express');
 var path = require('path');
-var cookieParser = require('cookie-parser');
+
 var logger = require('morgan');
-require('./public/local-strategy.js');
-var passport = require('passport');
+
+
 var cors = require('cors');
 
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-const { Session } = require('inspector');
-const session = require('express-session');
+
 const mongoose = require('mongoose')
-const MongoStore = require('connect-mongo');
+
 var app = express();
 mongoose.connect('mongodb+srv://h632097:yahya666@cluster0.xv5zm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(console.log("database connect"))
 //mongoose.connect('mongodb://localhost:27017').then(console.log("database connect"))
@@ -30,27 +29,11 @@ app.set('view engine', 'jade');
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
+
 app.use(express.static(path.join(__dirname, 'public')));
-app.set('trust proxy', true);
-app.use(session({
-  secret: 'your-secret-key',
-  name:'note-session',
- resave: false,
- saveUninitialized: false,
- cookie:{maxAge: 6000*6000,
-  //httpOnly:true,
-  //secure:true,
-  
-  sameSite:"lax",
-  
-},
- store: MongoStore.create(
-  {client: mongoose.connection.getClient()}
- )
-}))
-app.use(passport.initialize())
-app.use(passport.session())
+
+
+
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 
