@@ -16,7 +16,9 @@ var usersRouter = require('./routes/users');
 const mongoose = require('mongoose')
 
 var app = express();
-mongoose.connect('mongodb+srv://h632097:yahya666@cluster0.xv5zm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(console.log("database connect"))
+try{mongoose.connect('mongodb+srv://h632097:yahya666@cluster0.xv5zm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0').then(console.log("database connect"))}
+catch(error){console.log(error)}
+
 //mongoose.connect('mongodb://localhost:27017').then(console.log("database connect"))
 
 let corsOptions = {
