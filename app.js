@@ -21,11 +21,14 @@ catch(error){console.log(error)}
 
 //mongoose.connect('mongodb://localhost:27017').then(console.log("database connect"))
 
-let corsOptions = {
-  origin: [ 'http://localhost:5173', 'http://localhost:5175','https://yahya0morsy.github.io/note-front', 'https://yahya0morsy.github.io','http://localhost:8000','https://yahya0morsy.github.io/note-front/#/try' ],
-  credentials: true 
-};
-app.use(cors(corsOptions));
+
+const corsConfig = {
+  origin: ['http://localhost:5173', 'http://localhost:5175','https://yahya0morsy.github.io/note-front', 'https://yahya0morsy.github.io','http://localhost:8000','https://yahya0morsy.github.io/note-front/#/try'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE']
+}
+app.use(cors(corsConfig))
+app.options("", cors(corsConfig))
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
+var express = require('express');
 passhash = function passhash(password){
     
     const salt = bcrypt.genSaltSync(saltRounds)

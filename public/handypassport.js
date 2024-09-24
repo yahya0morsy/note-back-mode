@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var express = require('express');
 const User = require('../src/schemas/user');
 const { comparepass } = require('../public/hasher.js');
 require('../public/hasher.js')
