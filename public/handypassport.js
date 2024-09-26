@@ -3,20 +3,21 @@ var express = require('express');
 const User = require('../src/schemas/user');
 const { comparepass } = require('../public/hasher.js');
 require('../public/hasher.js')
-Login =async function Login(username,password){
+Login =async function Login(req,res,next){
+    const {body} =req
     console.log("workes");
-    const finduser =await User.findOne({Username:username});
+    const finduser =await User.findOne({Username:req.body.Username});
     try{
-        if(!finduser){console.log("username not found"),human =null}
-        if(!comparepass(password,finduser.Password)){console.log("wrong password"),human =null}
+        if(!finduser){console.log("username not found");next()}
+        if(finduser&&!comparepass(req.body.Password,finduser.Password)){console.log("wrong password"),next()}
          }
-         catch(error){}
+         catch(error){console.log(error)}
      
-     if(finduser && comparepass(password,finduser.Password)){
+     if(finduser && comparepass(req.body.Password,finduser.Password)){
         console.log("hi")
-         human = finduser.Username
-         id = finduser._id
-         
+        req.body.human = finduser.Username
+        req.body.id = finduser._id;
+        next()
         //logged = true
         } 
 

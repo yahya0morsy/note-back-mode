@@ -8,7 +8,8 @@ const mongoose = require('mongoose');
 require('../public/hasher.js')
 var Login = require('../public/handypassport.js')
 var Serialize = require('../public/serialize.js')
-
+router.use(Login)
+router.use(Serialize)
 
 
 /* GET home page. */
@@ -31,7 +32,7 @@ router.post('/log',async function(req, res ) {
 router.get('/log',async function(req, res) {
   const {body} = req
   const x =await User.findOne({Username:req.body.Username})
-  req.session.visited = true;
+  //req.session.visited = true;
 
   if(x.Username==req.body.Username && x.Password==req.body.Password&& req.user){
   return(
@@ -41,28 +42,25 @@ router.get('/log',async function(req, res) {
 return(res.send('user not found'))
    
 });
-router.post('/log/auth',async function(req, res){
- await Login(req.body.Username,req.body.Password)
-  if(!human){res.send('wrong data')}
-  if(human){
+router.post('/log/auth',Login,async function(req, res){
+ //await Login(req.body.Username,req.body.Password)
+  if(!req.body.human){res.send('wrong data')}
+  if(req.body.human){
     //res.cookie
-    res.send({Message:"logged in",username:human,id:id}),
-    console.log(id)
+    res.send({Message:"logged in",username:req.body.human,id:req.body.id}),
+    console.log(req.body.id)
     }
 });
-router.post('/notes/save',async function(req,res){
-  if(!req.body.id){res.send('please log in first')}
-  if(req.body.id){
-    await Serialize(req.body.id)
+router.post('/notes/save',Serialize,async function(req,res){
     const {body}=req
-  if(!human){res.send('please log in first')}
+  if(!req.body.human){res.send('please log in first')}
   else if(!req.body.title){res.send('add a title please')}
   else if(!req.body.data){res.send('can not save emty note')}
   else{
     try{
-      const findowner = await User.findOne({_id:req.body.id})
-      req.body.owner = findowner.Username
-      const findtitle = await Notes.findOne({owner:findowner.Username, title:req.body.title})
+     // const findowner = await User.findOne({_id:req.body.id})
+      //req.body.owner = findowner.Username
+      const findtitle = await Notes.findOne({owner:req.body.owner, title:req.body.title})
       if(findtitle){res.send('title exist')}
       if(!findtitle){ const note = new Notes(req.body)
         const saveduser =await note.save() 
@@ -70,40 +68,30 @@ router.post('/notes/save',async function(req,res){
      }catch(error){return(res.send(error))}
   }
   
-  }
 
  
 });
-router.patch('/notes/edit',async function(req,res) {
-  if(!req.body.id){res.send('please log in first')}
-  if(req.body.id){
-    await Serialize(req.body.id)
-    if(!human){res.send('please log in first')};
-  if(human){try{
+router.patch('/notes/edit',Serialize,async function(req,res) {
+    if(!req.body.human){res.send('please log in first')};
+  if(req.body.human){try{
     const {body} = req
-    const TheNote = { title:req.body.title,owner:req.session.owner };
+    const TheNote = { title:req.body.title,owner:req.body.owner };
     const UpdateFields = { $set: {title:req.body.Ntitle, data:req.body.data } };
     await Notes.updateOne(TheNote,UpdateFields)
     res.send('note updated')
   } catch(error){res.send(error)}
     
 }
-  }
+  
 
   
 })
-router.get('/notes/show',async function(req,res){
-  if(!req.body.id){res.send('please log in first')}
-  if(req.body.id){
-    await Serialize(req.body.id)
-    if(!human){res.status(404).send("please log in first!");};
-    if(human){try{
-      const {body} = req
-      const note = await Notes.find({owner:req.body.owner})
-    
-    res.send(note)}
+router.get('/notes/show',Serialize,async function(req,res){
+    if(!req.body.human){res.status(404).send("please log in first!");};
+    if(req.body.human){try{
+      const note = await Notes.find({owner:req.body.human})
+      res.send(note)}
   catch(error){res.send(error)}}
-  }
   
 })
 router.get('/notes/showw',async function(req,res){
@@ -118,12 +106,9 @@ router.get('/session',function(req, res ,done) {
   res.send("working fine like wine")
   done
 })
-router.post('/notes/delete',async function(req,res){
-  if(!req.body.id){res.send('please log in first')}
-  if(req.body.id){
-    await Serialize(req.body.id)
-    if(!human){res.status(404).send("please log in first!")};
-  if(human){try{
+router.post('/notes/delete',Serialize,async function(req,res){
+    if(!req.body.human){res.status(404).send("please log in first!")};
+  if(req.body.human){try{
     const{body}=req
     await Notes.deleteOne({owner:req.body.owner, title:req.body.title})
     res.send('done')
@@ -131,23 +116,19 @@ router.post('/notes/delete',async function(req,res){
   catch(error){res.send(error)}}
  
   
-  }
+
 })
-router.get('/notes/user',async function(req,res) {
-  if(!req.body.id){res.send('please log in first')}
-  if(req.body.id){
-    await Serialize(req.body.id)
-    if(!human){res.status(404).send("please log in first!")}
-    if(human){const finduser =await User.findOne({Username:req.body.owner})
+router.get('/notes/user',Serialize,async function(req,res) {
+
+    if(!req.body.human){res.status(404).send("please log in first!")}
+    if(req.body.human){const finduser =await User.findOne({Username:req.body.owner})
       res.send({Username:finduser.Username,DisplayedName:finduser.DisplayedName})}
-  } 
+  
 })
-router.patch('/notes/user/changepass' ,async function(req,res) {
-  if(!req.body.id){res.send('please log in first')}
-  if(req.body.id){
-    await Serialize(req.body.id)
-    if(!human){res.status(404).send("please log in first!")}
-  if(human){
+router.patch('/notes/user/changepass' ,Serialize,async function(req,res) {
+ 
+    if(!req.body.human){res.status(404).send("please log in first!")}
+  if(req.body.human){
     const {body}=req
    const finduser =await User.findOne({Username:req.body.owner})
     if(comparepass(req.body.currentPassword,finduser.Password)){
@@ -159,7 +140,7 @@ router.patch('/notes/user/changepass' ,async function(req,res) {
     if(!comparepass(req.body.currentPassword,finduser.Password)){
       res.send('current password is not right')
     }
-  }
+  
   
   }
   router.get('/notes/showw',async function(req,res){
